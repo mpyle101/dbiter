@@ -1,0 +1,23 @@
+{
+    "name": "jester",
+    "version": "0.0.1",
+    "main": "./dist/main.js",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf ./dist",
+        "exec": "node ./dist/main.js",
+        "start": "npm run build && npm run exec"
+    },
+    "keywords": [],
+    "author": "Michael Pyle",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/better-sqlite3": "^7.6.12",
+        "@types/node": "^22.13.4",
+        "typescript": "^5.7.3"
+    },
+    "dependencies": {
+        "better-sqlite3": "^11.8.1",
+        "kysely": "^0.27.5"
+    }
+}

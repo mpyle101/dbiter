@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "lib": ["es2023"],
+        "module": "nodenext",
+        "target": "es2024",
+        "outDir": "./dist",
+        "baseUrl": "./src",
+
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "moduleResolution": "nodenext",
+        "experimentalDecorators": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "src/**/*.test.ts"]
+}
