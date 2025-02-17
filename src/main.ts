@@ -26,8 +26,6 @@ const main = async () => {
     for (const rec of value!) {
         console.log(rec);
     }
-
-    return 'done'
 }
 
 main().then(console.log)
