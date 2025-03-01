@@ -1,49 +1,49 @@
 import { db } from './db'
 import { RecordIterator, RecordBatchIterator } from './iterators'
 
-export const find_workouts = (user_id: number, limit?: number, offset?: number) => {
-    let query = db.selectFrom('workout');
-    query = query.where('user_id', '=', user_id);
-
-    query = limit ? query.limit(limit) : query.limit(50);
-    query = offset ? query.offset(offset) : query.offset(0);
-
-    return query.selectAll().execute()
+type Workout = {
+    id: number;
+    user_id: number;
+    csv: string;
+    seqno: number;
+    workout_date: Date;
+    created: Date;
 }
 
-export const find_records = (
-    user_id: number,
-    opts?: {
-        limit?: number,
-        offset?: number,
-    }
-) => new RecordIterator({
-        user_id,
-        limit: opts?.limit || 50,
-        offset: opts?.offset || 0
-    },
-    find_internal
-)
-
-export const find_batches = (
-    user_id: number,
-    opts?: {
-        limit?: number,
-        offset?: number,
-    }
-) => new RecordBatchIterator({
-        user_id,
-        limit: opts?.limit || 50,
-        offset: opts?.offset || 0
-    },
-    find_internal
-)
-
+type Options = {
+    limit?: number;
+    offset?: number;
+    batched?: boolean;
+}
 
 type Params = {
     user_id: number
     limit: number
     offset: number
+}
+
+export function find(user_id: number, opts?: Options & { batched: true }): RecordBatchIterator<Workout, Params>;
+export function find(user_id: number, opts?: Options): RecordIterator<Workout, Params>;
+export function find(user_id: number, opts?: Options)
+{
+    const { batched = false } = opts ?? {};
+    if (batched) {
+        return new RecordBatchIterator({
+                user_id,
+                limit: opts?.limit || 50,
+                offset: opts?.offset || 0
+            },
+            find_internal
+        )
+    } else {
+        return new RecordIterator({
+                user_id,
+                limit: opts?.limit || 50,
+                offset: opts?.offset || 0
+            },
+            find_internal
+        )
+    }
 }
 
 const find_internal = (params: Params) =>
@@ -53,3 +53,14 @@ const find_internal = (params: Params) =>
         .offset(params.offset)
         .selectAll()
         .execute()
+
+export const find_workouts = (user_id: number, limit?: number, offset?: number) => {
+    let query = db.selectFrom('workout');
+    query = query.where('user_id', '=', user_id);
+
+    query = limit ? query.limit(limit) : query.limit(50);
+    query = offset ? query.offset(offset) : query.offset(0);
+
+    return query.selectAll().execute()
+}
+        
